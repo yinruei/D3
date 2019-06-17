@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"></script>
+
+
+</head>
+
+<body>
+    <h1>d3</h1>
+    <!-- 這裡的id可以是任何名稱 -->
+    <div id="chart"></div>
+    <!-- 引用d3.js -->
+    <script>
+        // 選擇一個畫面上元素作為容器
+        const svg = d3.select('#chart')
+            // 設定要新增的標籤名稱
+            .append('svg')
+            // 設定svg的width屬性
+            .attr('width', 600)
+            // 設定svg的height屬性
+            .attr('height', 600);
+
+        const data = [6, 9, 12, 15, 5, 9, 20,]
+
+        //圓形群組
+        const circles = svg
+            .selectAll('circle')
+            .data(data)
+
+        // 取得陣列最大值
+        console.log(Math.max(...data))
+        //預設最大是第一個數字
+        let maxR = data[0]
+        data.forEach(function (d) {
+            //如果有個數字大於最大的數字
+            if (d > maxR) {
+                //設定此數字為最大數字
+                maxR = d
+            }
+        });
+        console.log(maxR)
+
+        circles
+            .enter()
+            .append('circle')
+            //半徑
+            .attr('r', function (d, i) {
+                //d是資料 ， i是排序
+                // `字串可以跟變數組合
+                // console.log(`第${i + 1}顆半徑是${d}`);
+                //d是 6, 9, 12, 15
+                return d;
+            })
+            //圓心的x位置
+            .attr('cx', function (d, i) {
+                return (i * 40) + maxR;
+            })
+            //圓心的y位置
+            .attr('cy', function (d, i) {
+                //是否是奇數
+                // i除2餘數如果不是0
+                if (i % 2 !== 0) {
+                    return maxR * 2
+                }
+                else {
+                    return maxR
+                }
+            })
+            .attr('fill', function (d, i) {
+                //如果資料>10,回傳橘色,其他則是黃色
+                if (d > 10) {
+                    return '#f85a40'
+                } else {
+                    return '#ffc845'
+                }
+            })
+
+        //新增矩形
+        /*
+        svg.append('rect')
+            .attr('width', 120)
+            .attr('height', 30)
+            // 設定所在座標
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('fill', '#f10025');
+        */
+        //新增圓形
+        /*
+        svg.append('circle')
+            //半徑
+            .attr('r', 12)
+            //圓心的x位置
+            .attr('cx', 12)
+            //圓心的y位置
+            .attr('cy', 20)
+            .attr('fill', '#25f100')
+        */
+
+
+    </script>
+</body>
+
+</html>
