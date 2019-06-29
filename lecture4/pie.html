@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>圓餅圖</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"></script>
+
+</head>
+<body>
+    <!-- <svg width="400" height="400">
+        <g transform="translate(200, 200)">
+            <path fill="orange"
+                d="M-26.105238444010276,198.2889722747621A200,200,0,0,1,-198.28897227476205,26.105238444010485L-118.97338336485723,15.663143066406292A120,120,0,0,0,-15.663143066406166,118.97338336485726Z">
+            </path>
+        </g>
+    </svg> -->
+    <div id="pieChart"></div>
+    <script>
+        //資料
+        // const data = [10, 2, 4, 5, 20, 35]
+        const data = [
+            { price: 1000 },
+            { price: 500 },
+            { price: 2500 },
+            { price: 800 }
+        ]
+        //定義尺寸
+        const width = 400,
+            height = 400,
+            radius = width / 2;
+        //SVG
+        const svg = d3.select('#pieChart')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+        //準備產生圓形資料的函數
+        const pie = d3.pie()
+            // 必須回傳跟繪製圓餅圖有關的數字
+            .value(function (d) {
+                // console.log('d: ', d)
+                return d.price;
+        })
+        console.log(pie(data))
+
+        //準備產生弧形資料的函數
+        const arc = d3.arc()
+            //內圓半徑
+            .innerRadius(radius - 80)
+            //外圓半徑
+            .outerRadius(radius);
+        // const testdata = pie(data)[0]
+        // console.log(arc(testdata));
+
+        // 放入g
+        const arcs = svg.selectAll('.arc')
+            .data(pie(data))
+            .enter()
+            .append('g')
+            .attr('class', 'arc')
+            .attr('transform', `translate(${radius}, ${radius})`)
+
+        //顏色
+        colors = d3.schemeCategory10
+        console.log(colors)
+
+        // 在每個g放入path
+        arcs.append('path')
+            .attr('d', function (d) {
+                // console.log(d);
+                // console.log(arc(d));
+                return arc(d);
+            })
+            .attr('fill', function(d, i) {
+                return colors[i];
+            })
+</script>
+</body>
+</html>
