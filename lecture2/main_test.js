@@ -26,19 +26,51 @@ const csv = d3
 // console.log(csv);//javascript Promise物件 還在執行中還沒有給你回覆，是一個非同步的行為
     //當成功讀取檔案之後
     .then(function(data) {
+        // console.log(data)
         data.forEach(function(d) {
-            // console.log(d.sale)
+            //把sale的值轉為數字
             d.sale = parseFloat(d.sale)//parse成浮點數
-        })
+        });
         // console.log(data);
+
+        //計算出最高的sale
+        const maxSale = d3.max(data, function(d) {
+            //回傳需要比對大小的屬性
+            return d.sale;
+        });
+        // console.log('maxSale', maxSale);
+
+        //建立y軸比例尺
+        const y = d3.scaleLinear()
+            //傳入原始資料最小值與最大值
+            .domain([0, maxSale])
+            //定義顯示時最小與最大的像素
+            .range([0, height]);
+
+        // console.log(y(21000))
+        // console.log(y(10000))
+        // console.log(y(10500))
+        // console.log(y(5000))
+
+        //定義長條的群組，並且傳遞資料  rect是標籤
+        const bars = group
+            .selectAll('rect')
+            .data(data)
+
+        //繪製長條的圖形
+        bars.enter()
+            .append('rect')
+            .attr('x', function(d, i) {
+                return i * 30;
+            })
+            .attr('y', 0)
+            .attr('width', 20)
+            .attr('height', function(d) {
+                // console.log(d)//d是物件
+                return d.sale;
+            })
+
     });
-        // data.forEach(function(d) {
-        //     // console.log(d);
-        //     d.sale = parseFloat(d.sale)//parse成浮點數
-        // });
-        // console.log(data);
-
-
 
 //         // 定義長條的群組，並且傳遞資料
 //         const bars = group.selectAll('rect').data(data);

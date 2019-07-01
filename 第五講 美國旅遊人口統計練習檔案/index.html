@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>美國旅遊人口統計</title>
+</head>
+
+<body>
+    <h1 class="display-4 text-center my-3">美國旅遊人口統計</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- 操作區 -->
+                <div class="my-5 text-center">
+                    <button id="randomBtn" class="btn btn-primary my-1" onclick="loadData()">
+                        <i class="fas fa-sync"></i> 載入資料</button>
+                    <button id="randomBtn" class="btn btn-primary my-1" onclick="randomSeed()">
+                        <i class="fas fa-sync"></i> 隨機產生數值</button>
+                    <button id="setZeroBtn" class="btn btn-danger my-1" onclick="setZero()">
+                        <i class="fas fa-adjust"></i> 將數據歸零</button>
+                    <button id="allIncreaseBtn" class="btn btn-success my-1" onclick="increase()">
+                        <i class="fas fa-plus"></i> 全部加1000000</button>
+                    <button id="allDecreaseBtn" class="btn btn-success my-1" onclick="decrease()">
+                        <i class="fas fa-plus"></i> 全部減1000000</button>
+                </div>
+                <!-- 地圖區 -->
+                <div id="map"></div>
+                <!-- 提示區 -->
+                <div id="labelGroup">
+                    <!--
+                        提示範本
+                        <h1>
+                            <i class="fas fa-map-marker-alt fa-fw"></i>
+                            Texas
+                            <br>
+                            <i class="fas fa-male fa-fw"></i>
+                            <span class="badge badge-primary">
+                            28304596
+                            </span>
+                        </h1>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+    <!-- d3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
+    <!-- main.js -->
+    <script src="./js/main.js"></script>
+</body>
+
+</html>

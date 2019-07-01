@@ -33,15 +33,15 @@ d3.csv('data.csv')
                         value: d['住宅部門售電量(度)']
                     },
                     {
-                        title: '住宅用電',
+                        title: '服務業部門',
                         value: d['服務業部門售電量(度)']
                     },
                     {
-                        title: '住宅用電',
+                        title: '機關用電',
                         value: d['機關用電售電量(度)']
                     },
                     {
-                        title: '住宅用電',
+                        title: '農林漁牧',
                         value: d['農林漁牧售電量(度)']
                     },
                 ]
@@ -63,15 +63,34 @@ d3.csv('data.csv')
 
         //放置標題
         column.append('h1')
-            .attr('class', 'text-center text-primary')
+            .attr('class', 'text-center text-primary mb-5 mt-5')
             .text(function (d) {
                 return d.city;
             });
 
         //定義尺寸
-        const width = 400,
-            height = 400,
+        const width = d3.select('.column').node().clientWidth,//400,
+            height = width + 200,
             radius = width / 2;
+
+        //取得.column的寬度
+        // console.log('column: ', d3.select('.column').node().clientWidth);
+
+        //定義顏色
+        // const colors = d3.schemeCategory10;
+        // console.log('colors: ', colors[10]);
+
+        //顏色列表
+        const colors = d3.scaleOrdinal()
+            .range(d3.schemeCategory10)
+            // .range(['red', 'orange', 'green'])
+        // console.log(colors(0))
+        // console.log(colors(1))
+        // console.log(colors(2))
+        // console.log(colors(3))
+        // console.log(colors(10))
+        // console.log(colors(11))
+
 
         // 定義形狀產生器
         const arc = d3.arc()
@@ -85,15 +104,50 @@ d3.csv('data.csv')
 
         //放置svg
         const svg = column.append('svg')
-            .attr('width', width)
-            .attr('height', height)
-
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${width} ${height}`)//縮放，這邊是100%的縮放
         /*
             {
                 title: 'xxx',
                 data: [{}, {}, {}]
             }
         */
+
+        //在每個svg裡放入一個g.label-container
+        const labelContainer = svg.append('g')
+            .attr('class', 'label-container')
+            .attr('transform', `translate(0, ${(radius * 2) + 15})`)
+
+        const labelGroup = labelContainer
+            .selectAll('.label-group')
+            .data(function(d) {
+                // console.log(d.data);
+                return d.data;
+            })
+            .enter()
+            .append('g')
+            .attr('class', 'label-group')
+            //照資料順序位移y
+            .attr('transform', function(d, i) {
+                return `translate(0, ${16 * i})`
+            })
+
+        labelGroup.append('rect')
+            .attr('width', 10)
+            .attr('height', 10)
+            .attr('fill', function(d, i) {
+                return colors(i);
+            });
+
+        labelGroup.append('text')
+            .text(function (d) {
+                return `${d.title}:${d.value}`
+            })
+            .attr('font-size', 10)
+            .attr('y', 8)
+            .attr('x', 15)
+
         const arcs = svg
             .selectAll('.arc')
             .data(function(d) {
@@ -104,7 +158,6 @@ d3.csv('data.csv')
             .attr('class', 'arc')
             .attr('transform', `translate(${radius}, ${radius})`);
 
-        const colors = d3.schemeCategory10;
         arcs.append('path')
             .attr('d', function(d) {
                 // console.log(d);
@@ -112,7 +165,7 @@ d3.csv('data.csv')
                 return arc(d)
             })
             .attr('fill', function(d, i) {
-                return colors[i];
+                return colors(i);
             })
 
         // arcs.attr('test', function (d) {
