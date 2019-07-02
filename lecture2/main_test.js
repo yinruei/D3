@@ -1,5 +1,5 @@
-const width = 500,
-    height = 500;
+const width = 250,
+    height = 400;
 
 
 // 在圖表容器裡面放入svg圖形
@@ -33,12 +33,50 @@ const csv = d3
         });
         // console.log(data);
 
+        //計算平均的sale
+        const avgSale = data.reduce(function(num, d){
+            console.log('num ', num)
+            console.log('d ', d)
+            return num + d.sale;
+        }, 0) / data.length;
+        console.log(avgSale)
+
         //計算出最高的sale
         const maxSale = d3.max(data, function(d) {
             //回傳需要比對大小的屬性
             return d.sale;
         });
         // console.log('maxSale', maxSale);
+
+        //對應labels
+        const labels = data.map(function (d) {
+            return d.name;
+        });
+        // console.log(labels)
+
+        //建立x軸的對應
+        const x = d3.scaleBand()
+            //傳入原始資料需要對照的key
+            .domain(labels)
+            //顯示最大與最小的值
+            .range([0, width])
+            //每一個bar的留白比例多少
+            .paddingInner(0.1)
+            //bars左右留白比例
+            .paddingOuter(0)
+        
+        // 顯示寬度 width / 資料長度 - 留白
+        // console.log(x.bandwidth())
+
+        // console.log({
+        //     //Linda長條圖x的位移
+        //     Linda: x('Linda'),
+        //     David: x('David'),
+        //     Andrew: x('Andrew'),
+        //     Josh: x('Josh')
+        // })
+
+
 
         //建立y軸比例尺
         const y = d3.scaleLinear()
@@ -61,52 +99,26 @@ const csv = d3
         bars.enter()
             .append('rect')
             .attr('x', function(d, i) {
-                return i * 30;
+                // return i * 30;
+                return x(d.name);
             })
             .attr('y', 0)
-            .attr('width', 20)
+            // .attr('width', 20)
+            .attr('width', x.bandwidth())
             .attr('height', function(d) {
                 // console.log(d)//d是物件
-                return d.sale;
+                // return d.sale;
+                return y(d.sale);
+            })
+            .attr('fill', function(d) {
+                if (d.sale >= avgSale) {
+                    return '#30c39e'
+                } else {
+                    return '#fd5c63'
+                }
             })
 
     });
-
-//         // 定義長條的群組，並且傳遞資料
-//         const bars = group.selectAll('rect').data(data);
-
-//         //產生labels，以資料的name作為labels
-//         const labels = data.map(function(d) {
-//             return d.name;
-//         })
-//         console.log(labels)
-
-//         //建立x軸的資料對應
-//         const x = d3.scaleBand()
-//             .domain(labels)
-//             .range([0, width])
-
-//         //繪製長條的圖形
-//         bars.enter()
-//             .append('rect')
-//             .attr('x', function(d) {
-//                 return x(d.name);
-//             }
-//             .attr('y', 0)
-//             // .attr('width', 20)
-//             .attr('width', x.bandwidth)
-//             // .attr('height', function(d) {
-//             //     return d.sale;
-//             .attr('height', function(d) {
-//                 // 顯示在畫面的高度將依據比例而決定
-//                 return y(d.sale);
-//             })
-
-
-//     });
-// console.log(csv);
-
-
 
 /*
 const data = [10, 5, 6, 7, 15];
