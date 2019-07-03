@@ -1,24 +1,32 @@
-const width = 250,
-    height = 400;
+//svg的大小
+const svgWidth = 500,
+    svgHeight = 500;
+
+//圖表的留白
+const padding = {
+    top: 20,
+    bottom: 20,
+    left: 60,
+    right: 20
+}
+
+
+//圖表group的大小
+const width = svgWidth - padding.left - padding.right,
+    height = svgHeight - padding.top - padding.bottom;
 
 
 // 在圖表容器裡面放入svg圖形
 const svg = d3.select('#chart')
     .append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
-// //建立y軸比例尺
-// const y = d3.scaleLinear()
-//     //原始的資料範圍-填入資料的最小數字雨最大數字
-//     .domain([0, 21000])//最小值是資料的最小值還是0?
-//     //圖表顯示的大小範圍
-//     .range([0, height])
-
+    .attr('width', svgWidth)
+    .attr('height', svgHeight);
 
 // 在svg放入一個group
 // g就是group
 const group = svg.append('g')
+    //讓圖表區位移
+    .attr('transform', `translate(${padding.left}, ${padding.top})`)
 
 // 讀取csv
 const csv = d3
@@ -76,19 +84,36 @@ const csv = d3
         //     Josh: x('Josh')
         // })
 
+        // 描述需要顯示x軸
+        const xAxis = d3.axisBottom(x);
+        //把x軸放到svg
+        // svg.append('g')
+        //     //把軸心的內容放上去
+        //     .call(xAxis)
+        //     .attr('transform', `translate(${padding.left}, ${height + padding.top})`)
 
+        group.append('g')
+            .call(xAxis)
+            .attr('transform', `translate(0, ${height})`);
 
         //建立y軸比例尺
         const y = d3.scaleLinear()
             //傳入原始資料最小值與最大值
             .domain([0, maxSale])
             //定義顯示時最小與最大的像素
-            .range([0, height]);
+            // .range([0, height]);
+            .range([height, 0]);
 
         // console.log(y(21000))
         // console.log(y(10000))
         // console.log(y(10500))
         // console.log(y(5000))
+
+        //定義要顯示的y軸
+        const yAxis = d3.axisLeft(y);
+        //把y軸放置到畫面上
+        group.append('g')
+            .call(yAxis);
 
         //定義長條的群組，並且傳遞資料  rect是標籤
         const bars = group
@@ -102,13 +127,15 @@ const csv = d3
                 // return i * 30;
                 return x(d.name);
             })
-            .attr('y', 0)
+            .attr('y', function(d) {
+                return y(d.sale)
+            })
             // .attr('width', 20)
             .attr('width', x.bandwidth())
             .attr('height', function(d) {
                 // console.log(d)//d是物件
                 // return d.sale;
-                return y(d.sale);
+                return height - y(d.sale);
             })
             .attr('fill', function(d) {
                 if (d.sale >= avgSale) {
