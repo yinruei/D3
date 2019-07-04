@@ -120,6 +120,10 @@ const csv = d3
             .selectAll('rect')
             .data(data)
 
+        //長條圖不透明度
+        const normalOpacity = 0.7,
+            hoverOpacity = 1;
+        
         //繪製長條的圖形
         bars.enter()
             .append('rect')
@@ -144,7 +148,37 @@ const csv = d3
                     return '#fd5c63'
                 }
             })
-
+            .attr('opacity', normalOpacity)
+            // .on('事件名稱', function(d){})
+            .on('mousemove', function(d){
+                // console.log('mouseenter');
+                // console.log(d);
+                // console.log(this);
+                //d3.event
+                // console.log(d3.event)
+                //選到被接觸的矩形
+                d3.select(this)
+                    .attr('opacity', hoverOpacity)
+                //選到tooltip
+                d3.select('#tooltip')
+                    //改變文字
+                    // .text(`<p>${d.name}</p>`)
+                    //改變html
+                    .html(`<p>${d.name}</p><p>$ ${d.sale}</p>`)
+                    //改變此元素的css
+                    .style('opacity', 1)
+                    .style('left', `${d3.event.pageX}px`)
+                    .style('top', `${d3.event.pageY - 40}px`)
+            })
+            .on('mouseleave', function (d) {
+                // console.log('mouseleave');
+                //把離開的矩形不透明度恢復正常
+                d3.select(this)
+                    .attr('opacity', normalOpacity)
+                d3.select('#tooltip')
+                    //改變此元素的css
+                    .style('opacity', 0);
+            })
     });
 
 /*
