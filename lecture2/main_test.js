@@ -34,7 +34,7 @@ const csv = d3
 // console.log(csv);//javascript Promise物件 還在執行中還沒有給你回覆，是一個非同步的行為
     //當成功讀取檔案之後
     .then(function(data) {
-        // console.log(data)
+        console.log(data)//array
         data.forEach(function(d) {
             //把sale的值轉為數字
             d.sale = parseFloat(d.sale)//parse成浮點數
@@ -47,7 +47,7 @@ const csv = d3
             console.log('d ', d)
             return num + d.sale;
         }, 0) / data.length;
-        console.log(avgSale)
+        // console.log(avgSale)
 
         //計算出最高的sale
         const maxSale = d3.max(data, function(d) {
@@ -58,6 +58,7 @@ const csv = d3
 
         //對應labels
         const labels = data.map(function (d) {
+            // console.log(d)
             return d.name;
         });
         // console.log(labels)
@@ -92,7 +93,7 @@ const csv = d3
         //     .call(xAxis)
         //     .attr('transform', `translate(${padding.left}, ${height + padding.top})`)
 
-        group.append('g')
+        group.append('g')//g才可以塞東西，可以想像成div
             .call(xAxis)
             .attr('transform', `translate(0, ${height})`);
 
@@ -112,7 +113,7 @@ const csv = d3
         //定義要顯示的y軸
         const yAxis = d3.axisLeft(y);
         //把y軸放置到畫面上
-        group.append('g')
+        group.append('g')//g才可以塞東西，可以想像成div
             .call(yAxis);
 
         //定義長條的群組，並且傳遞資料  rect是標籤
@@ -129,6 +130,7 @@ const csv = d3
             .append('rect')
             .attr('x', function(d, i) {
                 // return i * 30;
+                // console.log(x(d.name))
                 return x(d.name);
             })
             .attr('y', function(d) {
